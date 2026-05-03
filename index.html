@@ -802,85 +802,38 @@
     }
     .post-author { font-size: 13px; font-weight: 600; color: var(--text); }
     .post-time { font-size: 11px; color: var(--text3); margin-top: 1px; }
-    .post-image-wrap { width: 100%; aspect-ratio: 1/1; background: var(--surface3); overflow: hidden; }
+    .post-image-wrap { width: 100%; aspect-ratio: 1/1; background: var(--surface3); overflow: hidden; cursor: pointer; }
     .post-image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .post-caption { padding: 10px 14px; font-size: 13px; color: var(--text2); line-height: 1.5; }
-    .post-reactions-bar {
-      display: flex; align-items: center; gap: 6px;
-      padding: 0 14px 6px; flex-wrap: wrap;
+
+    /* ===== LIGHTBOX ===== */
+    .lightbox-overlay {
+      display: none; position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,0.96);
+      flex-direction: column; align-items: center; justify-content: center;
     }
-    .reaction-pill {
-      display: inline-flex; align-items: center; gap: 4px;
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 20px; padding: 3px 9px;
-      font-size: 12px; cursor: pointer; transition: all 0.15s;
-      -webkit-tap-highlight-color: transparent;
+    .lightbox-overlay.open { display: flex; }
+    .lightbox-img {
+      max-width: 100vw; max-height: 90vh;
+      object-fit: contain; border-radius: 4px;
+      animation: lbIn 0.2s ease;
     }
-    .reaction-pill.active { background: var(--accent-glow); border-color: var(--border2); }
-    .reaction-pill:active { transform: scale(0.93); }
-    .post-actions-bar {
-      display: flex; border-top: 1px solid var(--border);
+    @keyframes lbIn { from { opacity:0; transform:scale(0.93); } to { opacity:1; transform:scale(1); } }
+    .lightbox-close {
+      position: absolute; top: 18px; right: 18px;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255,255,255,0.12); border: none;
+      color: #fff; font-size: 22px; line-height: 1;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      -webkit-tap-highlight-color: transparent; transition: background 0.15s;
     }
-    .post-action-btn {
-      flex: 1; display: flex; align-items: center; justify-content: center;
-      gap: 6px; padding: 11px; font-size: 12px; font-weight: 500;
-      color: var(--text3); cursor: pointer;
-      border-right: 1px solid var(--border);
-      -webkit-tap-highlight-color: transparent; transition: color 0.15s;
+    .lightbox-close:active { background: rgba(255,255,255,0.25); }
+    .lightbox-caption {
+      margin-top: 14px; color: rgba(255,255,255,0.7);
+      font-size: 13px; text-align: center;
+      max-width: 90vw; line-height: 1.5;
     }
-    .post-action-btn:last-child { border-right: none; }
-    .post-action-btn.liked { color: var(--red); }
-    .post-action-btn svg { width: 16px; height: 16px; }
-    .post-action-btn:active { background: var(--surface2); }
-    .post-comments-wrap { padding: 0 14px 12px; display: none; }
-    .post-comments-wrap.open { display: block; }
-    .comment-item {
-      display: flex; gap: 8px; margin-bottom: 10px; align-items: flex-start;
-    }
-    .comment-avatar {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: var(--surface3); border: 1px solid var(--border2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 600; color: var(--accent); flex-shrink: 0;
-    }
-    .comment-bubble {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 8px 10px; flex: 1;
-    }
-    .comment-name { font-size: 11px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
-    .comment-text { font-size: 12px; color: var(--text2); line-height: 1.4; }
-    .comment-input-row {
-      display: flex; gap: 8px; align-items: center; margin-top: 8px;
-      padding-top: 8px; border-top: 1px solid var(--border);
-    }
-    .comment-input {
-      flex: 1; background: var(--surface2); border: 1.5px solid var(--border);
-      border-radius: 20px; padding: 9px 14px;
-      font-family: 'IBM Plex Sans', sans-serif; font-size: 13px;
-      color: var(--text); outline: none;
-    }
-    .comment-input:focus { border-color: var(--accent); }
-    .comment-send-btn {
-      background: var(--accent); color: #fff; border: none;
-      border-radius: 50%; width: 34px; height: 34px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; -webkit-tap-highlight-color: transparent;
-    }
-    .comment-send-btn svg { width: 16px; height: 16px; }
-    .react-picker {
-      display: none; position: fixed; z-index: 500;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 30px; padding: 8px 12px; gap: 8px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.18);
-      flex-wrap: nowrap;
-    }
-    .react-picker.open { display: flex; }
-    .react-emoji {
-      font-size: 22px; cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform 0.15s;
-    }
-    .react-emoji:active { transform: scale(1.3); }
+
     .post-create-bar {
       display: flex; align-items: center; gap: 10px;
       background: var(--surface); border: 1px solid var(--border);
@@ -1058,6 +1011,12 @@
   <div class="loading-label" id="loading-label">Loading...</div>
 </div>
 
+<div class="lightbox-overlay" id="lightbox-overlay" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">✕</button>
+  <img class="lightbox-img" id="lightbox-img" src="" alt="Full screen post" onclick="event.stopPropagation()" />
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
 <!-- MODAL -->
 <div id="modal-overlay" onclick="dismissModal()">
   <div class="modal-box" onclick="event.stopPropagation()">
@@ -1109,7 +1068,7 @@
     <div style="height:28px;"></div>
     <div class="field">
       <label class="field-label">Email Address or Reg Number</label>
-      <input class="field-input" type="text" id="login-email" placeholder="your@email.com or MD/25/2525" autocomplete="email" />
+      <input class="field-input" type="text" id="login-email" placeholder="your@email.com or MD\25\1976" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" />
     </div>
     <div class="field">
       <label class="field-label">Password</label>
@@ -1990,14 +1949,7 @@
 </div>
 
 <!-- REACT PICKER (global floating) -->
-<div class="react-picker" id="react-picker">
-  <span class="react-emoji" onclick="pickReact('❤️')">❤️</span>
-  <span class="react-emoji" onclick="pickReact('😂')">😂</span>
-  <span class="react-emoji" onclick="pickReact('😮')">😮</span>
-  <span class="react-emoji" onclick="pickReact('😢')">😢</span>
-  <span class="react-emoji" onclick="pickReact('👏')">👏</span>
-  <span class="react-emoji" onclick="pickReact('🔥')">🔥</span>
-</div>
+
 
 <script>
   /* ============================================================
@@ -2146,8 +2098,8 @@
   ============================================================ */
   async function doLoginSubmit() {
     const email    = document.getElementById('login-email').value.trim();
-    const password = document.getElementById('login-password').value;
-    if (!email || !password) return showModal('Missing Fields', 'Please enter your email and password.', 'warn');
+    const password = document.getElementById('login-password').value.trim();
+    if (!email || !password) return showModal('Missing Fields', 'Please enter your email or reg number, and your password.', 'warn');
     showLoading('Signing in...');
     try {
       const res = await api('login', { email, password });
@@ -4356,28 +4308,7 @@
 
   function buildPostCardHTML(p) {
     const initials = (p.authorName || 'U').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-    const liked = (p.likes || []).includes(currentUser?.id);
-    const likeCount = (p.likes||[]).length;
-    const commentCount = (p.comments||[]).length;
     const isAdmin = currentRole === 'admin';
-
-    const reactCounts = {};
-    (p.reactions || []).forEach(r => { reactCounts[r.emoji] = (reactCounts[r.emoji]||0) + 1; });
-    const reactionsHTML = Object.entries(reactCounts).map(([emoji, count]) =>
-      `<span class="reaction-pill" onclick="toggleReact('${p.id}','${emoji}')">${emoji} ${count}</span>`
-    ).join('');
-
-    const commentsHTML = (p.comments||[]).map(c => {
-      const cInit = (c.authorName||'U').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-      return `<div class="comment-item">
-        <div class="comment-avatar">${cInit}</div>
-        <div class="comment-bubble">
-          <div class="comment-name">${c.authorName}</div>
-          <div class="comment-text">${c.text}</div>
-        </div>
-      </div>`;
-    }).join('');
-
     return `<div class="post-card" id="post-${p.id}">
       <div class="post-header">
         <div class="post-avatar">${initials}</div>
@@ -4387,166 +4318,30 @@
         </div>
         ${isAdmin ? `<button onclick="adminDeletePost('${p.id}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:18px;padding:4px;">🗑</button>` : ''}
       </div>
-      <div class="post-image-wrap">
+      <div class="post-image-wrap" data-src="${p.imageUrl}" data-caption="${p.caption||''}" onclick="openLightbox(this.dataset.src, this.dataset.caption)" style="cursor:pointer;">
         <img src="${p.imageUrl}" alt="Post image" loading="lazy"
           onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:var(--text3);font-size:13px;\'>📷 Image unavailable</div>'" />
       </div>
       ${p.caption ? `<div class="post-caption">${p.caption}</div>` : ''}
-      ${reactionsHTML ? `<div class="post-reactions-bar">${reactionsHTML}</div>` : ''}
-      <div class="post-actions-bar">
-        <div class="post-action-btn ${liked?'liked':''}" onclick="toggleLike('${p.id}')">
-          <svg viewBox="0 0 24 24" fill="${liked?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          ${likeCount > 0 ? likeCount : 'Like'}
-        </div>
-        <div class="post-action-btn" onclick="toggleComments('${p.id}')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          ${commentCount > 0 ? commentCount : 'Comment'}
-        </div>
-        <div class="post-action-btn" onclick="showReactPicker('${p.id}', event)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-          React
-        </div>
-      </div>
-      <div class="post-comments-wrap" id="comments-${p.id}">
-        <div id="comments-inner-${p.id}">${commentsHTML}</div>
-        <div class="comment-input-row">
-          <input class="comment-input" type="text" placeholder="Write a comment…" id="comment-input-${p.id}" onkeydown="if(event.key==='Enter')sendComment('${p.id}')" />
-          <button class="comment-send-btn" onclick="sendComment('${p.id}')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          </button>
-        </div>
-      </div>
     </div>`;
   }
 
-  async function toggleLike(postId) {
-    const post = cachedPosts.find(p => p.id === postId);
-    if (!post) return;
-    // Optimistic update
-    if (!post.likes) post.likes = [];
-    const uid = currentUser?.id;
-    const idx = post.likes.indexOf(uid);
-    const wasLiked = idx >= 0;
-    if (wasLiked) post.likes.splice(idx, 1); else post.likes.push(uid);
-    const card = document.getElementById('post-' + postId);
-    if (card) {
-      const liked = !wasLiked;
-      const btn = card.querySelectorAll('.post-action-btn')[0];
-      btn.className = 'post-action-btn ' + (liked ? 'liked' : '');
-      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="${liked?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>${post.likes.length > 0 ? post.likes.length : 'Like'}`;
-    }
-    try {
-      const res = await api('likePost', { postId });
-      if (!res.ok) {
-        // Revert on failure
-        if (wasLiked) post.likes.push(uid); else post.likes.splice(post.likes.indexOf(uid), 1);
-        const card2 = document.getElementById('post-' + postId);
-        if (card2) { const btn = card2.querySelectorAll('.post-action-btn')[0]; btn.className = 'post-action-btn' + (wasLiked?' liked':''); btn.innerHTML = `<svg viewBox="0 0 24 24" fill="${wasLiked?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>${post.likes.length > 0 ? post.likes.length : 'Like'}`; }
-      }
-    } catch(e){}
+  function openLightbox(src, caption) {
+    const overlay = document.getElementById('lightbox-overlay');
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox-caption').textContent = caption || '';
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
   }
 
-  function toggleComments(postId) {
-    const wrap = document.getElementById('comments-' + postId);
-    if (wrap) wrap.classList.toggle('open');
+  function closeLightbox() {
+    document.getElementById('lightbox-overlay').classList.remove('open');
+    document.getElementById('lightbox-img').src = '';
+    document.body.style.overflow = '';
   }
 
-  async function sendComment(postId) {
-    const input = document.getElementById('comment-input-' + postId);
-    if (!input) return;
-    const text = input.value.trim();
-    if (!text) return;
-    input.value = '';
-    const post = cachedPosts.find(p => p.id === postId);
-    if (!post) return;
-    if (!post.comments) post.comments = [];
-    // Optimistic update — show comment immediately
-    const tempId = 'tmp-' + Date.now();
-    const newComment = { authorName: currentUser.name, text, id: tempId };
-    post.comments.push(newComment);
-    const inner = document.getElementById('comments-inner-' + postId);
-    if (inner) {
-      const cInit = (currentUser.name||'U').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-      inner.insertAdjacentHTML('beforeend', `<div class="comment-item" id="comment-${tempId}">
-        <div class="comment-avatar">${cInit}</div>
-        <div class="comment-bubble">
-          <div class="comment-name">${currentUser.name}</div>
-          <div class="comment-text">${text}</div>
-        </div></div>`);
-      // Update comment count button
-      const card = document.getElementById('post-' + postId);
-      if (card) {
-        const btn = card.querySelectorAll('.post-action-btn')[1];
-        if (btn) btn.innerHTML = btn.innerHTML.replace(/>\s*(Comment|\d+)\s*$/, `>${post.comments.length}`);
-      }
-    }
-    try {
-      const res = await api('commentPost', { postId, text });
-      if (res.ok && res.commentId) {
-        // Update the temp comment id in cache
-        newComment.id = res.commentId;
-        const el = document.getElementById('comment-' + tempId);
-        if (el) el.id = 'comment-' + res.commentId;
-      } else if (!res.ok) {
-        // Revert on failure
-        post.comments = post.comments.filter(c => c.id !== tempId);
-        const el = document.getElementById('comment-' + tempId);
-        if (el) el.remove();
-      }
-    } catch(e){}
-  }
-
-  function showReactPicker(postId, e) {
-    activeReactPostId = postId;
-    const picker = document.getElementById('react-picker');
-    picker.classList.add('open');
-    const rect = e.target.closest('.post-action-btn').getBoundingClientRect();
-    picker.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
-    picker.style.left = '50%';
-    picker.style.transform = 'translateX(-50%)';
-    e.stopPropagation();
-  }
-
-  document.addEventListener('click', () => {
-    const picker = document.getElementById('react-picker');
-    if (picker) picker.classList.remove('open');
-  });
-
-  async function pickReact(emoji) {
-    if (!activeReactPostId) return;
-    const postId = activeReactPostId;
-    activeReactPostId = null;
-    document.getElementById('react-picker').classList.remove('open');
-    const post = cachedPosts.find(p => p.id === postId);
-    if (!post) return;
-    // Optimistic update
-    if (!post.reactions) post.reactions = [];
-    post.reactions.push({ emoji, userId: currentUser?.id });
-    const commentsOpen = document.getElementById('comments-' + postId)?.classList.contains('open');
-    const cardEl = document.getElementById('post-' + postId);
-    if (cardEl) {
-      cardEl.outerHTML = buildPostCardHTML(post);
-      // Restore comments open state
-      if (commentsOpen) {
-        const newWrap = document.getElementById('comments-' + postId);
-        if (newWrap) newWrap.classList.add('open');
-      }
-    }
-    try {
-      const res = await api('reactPost', { postId, emoji });
-      if (!res.ok) {
-        // Revert on failure
-        post.reactions.pop();
-        const cardEl2 = document.getElementById('post-' + postId);
-        if (cardEl2) cardEl2.outerHTML = buildPostCardHTML(post);
-      }
-    } catch(e){}
-  }
-
-  async function toggleReact(postId, emoji) {
-    activeReactPostId = postId;
-    await pickReact(emoji);
-  }
+  // Close lightbox on back button (Android)
+  window.addEventListener('popstate', closeLightbox);
 
   async function adminDeletePost(postId) {
     showLoading('Deleting post...');
